@@ -7,15 +7,10 @@
     [bidi.bidi :refer [tag]]
     [hiccup.core :refer [html]]))
 
-(defn- abs
-  "Returns the absolute value of the given value n"
-  [n]
-  (if (neg? n) (- n) n))
-
 (defn- nearest
   "Nearest coordinate comparator"
   [{:keys [latitude longitude]} {:strs [lat lon]}]
-  (+ (abs (- latitude lat)) (abs (- longitude lon))))
+  (+ (Math/abs (- latitude lat)) (Math/abs (- longitude lon))))
 
 (defn- to-bikepoint-line
   "Extracts the Boris-bike point data from raw json map"
