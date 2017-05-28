@@ -40,11 +40,10 @@
            :produces   "text/json"
            :response   (fn [ctx]
                          (let [q (-> ctx :parameters :query)
-                               bd #(vector %2 (BigDecimal. #^String (%2 %1)))
+                               bd #(vector %2 (bigdec (%2 %1)))
                                location (into {} [(bd q :latitude) (bd q :longitude)])
-                               n (Integer. #^String (:nearest q))
-                               bikepoints (nearest-bikepoints location n)]
-                           (json/json-str bikepoints)))}}}))
+                               n (Integer. #^String (:nearest q))]
+                           (json/json-str (nearest-bikepoints location n))))}}}))
 
 (defn- bikepoint-routes-html
   "Returns an access controlled resource which shows the nearest n Boris-bike points for a given location"
@@ -61,14 +60,13 @@
          {:get
           {:produces "text/html"
            :response (fn [ctx]
-                       (let [title (format "Nearest %d Boris-bike points around Leyton (%f,%f)" n (:latitude location) (:longitude location))]
+                       (let [title (format "Nearest %d Boris-bike points around Leyton (%f, %f)" n (:latitude location) (:longitude location))]
                          (html
                            [:head [:title title]
-                            [:style (string/join "\n"
-                                                 [
-                                                  "table,th,td {border:1px solid black; border-collapse:collapse}"
-                                                  "th,td {padding:5px}"
-                                                  "tr:hover {background-color:#f5f5f5}"])]]
+                            [:style (string/join "\n" [
+                                                       "table,th,td {border:1px solid black; border-collapse:collapse}"
+                                                       "th,td {padding:5px}"
+                                                       "tr:hover {background-color:#f5f5f5}"])]]
                            [:body
                             [:h1 title]
                             [:table
