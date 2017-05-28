@@ -29,11 +29,6 @@
     (take n)
     (map to-bikepoint-line)))
 
-(defn- mkstr
-  "Constructs a string using a separator and any remaining arguments"
-  [sep & strings]
-  (string/join sep strings))
-
 (defn- bikepoint-routes-json
   "Returns the nearest Boris-bike points for a given location"
   []
@@ -69,10 +64,11 @@
                        (let [title (format "Nearest %d Boris-bike points around Leyton (%f,%f)" n (:latitude location) (:longitude location))]
                          (html
                            [:head [:title title]
-                            [:style (mkstr "\n"
-                                           "table,th,td {border:1px solid black; border-collapse:collapse}"
-                                           "th,td {padding:5px}"
-                                           "tr:hover {background-color:#f5f5f5}")]]
+                            [:style (string/join "\n"
+                                                 [
+                                                  "table,th,td {border:1px solid black; border-collapse:collapse}"
+                                                  "th,td {padding:5px}"
+                                                  "tr:hover {background-color:#f5f5f5}"])]]
                            [:body
                             [:h1 title]
                             [:table
