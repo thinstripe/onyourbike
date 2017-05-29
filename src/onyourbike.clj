@@ -42,7 +42,7 @@
                          (let [q (-> ctx :parameters :query)
                                bd #(vector %2 (bigdec (%2 %1)))
                                location (into {} [(bd q :latitude) (bd q :longitude)])
-                               n (Integer. #^String (:nearest q))]
+                               n (Integer/parseInt (:nearest q))]
                            (json/json-str (nearest-bikepoints location n))))}}}))
 
 (defn- bikepoint-routes-html
