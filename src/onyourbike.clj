@@ -22,12 +22,15 @@
 (defn- nearest-bikepoints
   "Given a location finds the nearest n Boris-bike points"
   [location n]
-  (->>
-    (slurp "https://api.tfl.gov.uk/BikePoint?app_id=a11ead08&app_key=b913ea59d79a3e545b9e09f933d0912b")
-    (json/read-str)
-    (sort-by (partial nearest location))
-    (take n)
-    (map to-bikepoint-line)))
+  (let [app_id "a11ead08"
+        app_key "b913ea59d79a3e545b9e09f933d0912b"
+        all-bikepoints-url (str "https://api.tfl.gov.uk/BikePoint?app_id=" app_id "&app_key=" app_key)]
+    (->>
+      (slurp all-bikepoints-url)
+      (json/read-str)
+      (sort-by (partial nearest location))
+      (take n)
+      (map to-bikepoint-line))))
 
 (defn- bikepoint-routes-json
   "Returns the nearest Boris-bike points for a given location"
@@ -39,7 +42,7 @@
           {:parameters {:query {:latitude String :longitude String :nearest String}}
            :produces   "text/json"
            :response   (fn [ctx]
-                         (let [q (-> ctx :parameters :query)
+                         (let [q (get-in ctx [:parameters :query])
                                bd #(vector %2 (bigdec (%2 %1)))
                                location (into {} [(bd q :latitude) (bd q :longitude)])
                                n (Integer/parseInt (:nearest q))]
